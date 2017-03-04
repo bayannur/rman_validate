@@ -9,7 +9,7 @@
 # |-----------------------------------------------------------------------|
 # | DATABASE   : Oracle                                                   |
 # | OS ENV     : CentOS 6.6 X86_64 Bit                                    |
-# | File       : rman_validate.sh                                         |
+# | File       : rman_validate_v2.sh                                      |
 # | CLASS      : LINUX Bourne-Again Shell Scripts                         |
 # | PURPOSE    : This bash script file used to validate rman backupset    |
 # |              that is generated last night via validate command on     |
@@ -17,7 +17,7 @@
 # |                                                                       |
 # | PARAMETERS : None.                                                    |
 # |                                                                       |
-# | MODIFIED   : 03/02/2017 (dd/mm/yyyy)                                  |
+# | MODIFIED   : 03/02/2017 (mm/dd/yyyy)                                  |
 # |                                                                       |
 # | NOTE       : As with any code,ensure to test this script in a         |
 # |              development environment before attempting to run it in   |
