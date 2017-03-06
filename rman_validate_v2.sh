@@ -17,7 +17,7 @@
 # |                                                                       |
 # | PARAMETERS : None.                                                    |
 # |                                                                       |
-# | MODIFIED   : 03/02/2017 (mm/dd/yyyy)                                  |
+# | MODIFIED   : 03/06/2017 (mm/dd/yyyy)                                  |
 # |                                                                       |
 # | NOTE       : As with any code,ensure to test this script in a         |
 # |              development environment before attempting to run it in   |
@@ -45,6 +45,7 @@ export BACK_LOG=~/rman_backup/log
 export RMAN=$ORACLE_HOME/bin/rman
 export SQLPLUS=$ORACLE_HOME/bin/sqlplus
 export YESTERDAY=`$DATE +%Y-%m-%d -d yesterday`
+export DAY_OF_WEEK=`$DATE +%u`
 export BSKEY_LIST=
 export BSKEY_LIST_WITH_COMMA=
 
@@ -70,8 +71,33 @@ BSKEY_LIST_WITH_COMMA=`echo $BSKEY_LIST | $AWK -F' ' '{ for ( i=1; i<NF; i++ ) p
 # | VALIDATE RMAN BACKUPSET THAT IS GENERATED LAST NIGHT                  |
 # +-----------------------------------------------------------------------+
 
-$RMAN nocatalog log $BACK_LOG/validate_`date +%Y-%m-%d`.log <<EOF
+case $DAY_OF_WEEK in
+
+6)
+
+$RMAN nocatalog log $BACK_LOG/validate_`$DATE +%Y-%m-%d`.log <<EOF
+connect target /
+run {
+allocate channel d1 type disk maxpiecesize 16g;
+allocate channel d2 type disk maxpiecesize 16g;
+allocate channel d3 type disk maxpiecesize 16g;
+allocate channel d4 type disk maxpiecesize 16g;
+validate backupset $BSKEY_LIST_WITH_COMMA check logical;
+release channel d4;
+release channel d3;
+release channel d2;
+release channel d1;
+}
+exit;
+EOF
+;;
+
+1|2|3|4|5|7)
+
+$RMAN nocatalog log $BACK_LOG/validate_`$DATE +%Y-%m-%d`.log <<EOF
 connect target /
 validate backupset $BSKEY_LIST_WITH_COMMA check logical;
 exit;
 EOF
+;;
+esac
